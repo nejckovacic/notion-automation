@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Run the script when the container launches
-CMD ["python", "./notion-automation.py"]
+CMD ["python", "./notion.py"]
