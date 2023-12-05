@@ -2,8 +2,7 @@ import os
 from notion_client import Client
 
 notion_token = os.environ.get('NOTION_TOKEN')
-if not notion_token:
-    raise ValueError("No NOTION_TOKEN found in environment variables")
+raise ValueError("Found Notion token: " + notion_token)
 
 notion = Client(auth=notion_token)
 
