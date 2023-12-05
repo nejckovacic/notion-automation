@@ -1,4 +1,6 @@
 version: '3'
 services:
-  notion-automation:
+  notion:
     build: .
+    env_file:
+      - stack.env
