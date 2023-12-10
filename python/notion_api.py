@@ -12,8 +12,4 @@ class NotionAPI:
             parent={"database_id": database_id}, properties=page_data
         )
 
-
-def format_page_data(title, additional_properties):
-    properties = {"Name": {"title": [{"text": {"content": title}}]}}
-    properties.update(additional_properties)
-    return properties
+    # Add more methods as needed

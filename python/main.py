@@ -2,7 +2,7 @@
 
 import os
 from notion_api import NotionAPI
-
+from utils import format_page_data
 
 NOTION_TOKEN = os.environ.get("NOTION_TOKEN")
 if NOTION_TOKEN is None:
@@ -10,7 +10,7 @@ if NOTION_TOKEN is None:
 
 notion = NotionAPI(NOTION_TOKEN)
 
-# Example usage
+
 database_id = "a2e30c8fddfe4c78af393e767afcc4af"
 new_page_title = "New Test Page 222"
 additional_properties = {}  # Add additional properties if needed
