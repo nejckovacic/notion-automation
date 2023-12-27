@@ -3,8 +3,8 @@ services:
   notion-daily-check:
     build:
       context: .services/repeating_tasks
-    env_file:
-      - stack.env
+  #  env_file:
+  #    - stack.env
 
   #notion-google-sync:
   #  build:
