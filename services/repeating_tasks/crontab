@@ -1,2 +1,2 @@
-45 0 * * * python /app/main.py >> /var/log/cron.log 2>&1
+15 1 * * * python /app/main.py >> /var/log/cron.log 2>&1
 # Don't forget to end this file with an empty newline
