@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y cron \
 COPY requirements.txt ./
 
 # Install any needed packages specified in requirements.txt
-# Ensure APScheduler is not in requirements.txt anymore
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
@@ -23,9 +22,9 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Create a crontab file and set permissions
-COPY crontab /etc/cron.d/crontab
-RUN chmod 0644 /etc/cron.d/crontab \
-    && crontab /etc/cron.d/crontab
+COPY crontab /etc/cron.d/my-cronjob
+RUN chmod 0644 /etc/cron.d/my-cronjob \
+    && crontab /etc/cron.d/my-cronjob
 
 # Set the entrypoint script to run when the container starts
 ENTRYPOINT ["/entrypoint.sh"]
