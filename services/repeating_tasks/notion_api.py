@@ -12,6 +12,7 @@ class NotionAPI:
     def _get_notion_token(self):
         # Try to get NOTION_TOKEN from OS environment variables
         token = os.getenv("NOTION_TOKEN")
+        
         if token is None:
             raise ValueError(
                 "No NOTION_TOKEN found in environment variables or .env file"

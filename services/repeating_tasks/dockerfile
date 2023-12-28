@@ -1,32 +1,29 @@
 # Use an official Python runtime as a parent image
 FROM python:3.8-slim
 
-# Install cron
-RUN apt-get update && apt-get -y install cron
-
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file into the container at /app
-COPY requirements.txt ./
+# Install cron and clean up in a single RUN to reduce layer size
+RUN apt-get update && apt-get -y install cron \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install any needed packages specified in requirements.txt
+# Copy the requirements file and install Python dependencies
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Add crontab file in the cron directory
-ADD crontab /etc/cron.d/my-cron-job
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/my-cron-job
-
-# Apply cron job
-RUN crontab /etc/cron.d/my-cron-job
+# Copy and set permissions for the cron job and the wrapper script
+COPY crontab /etc/cron.d/my-cron-job
+COPY run_script.sh /app/run_script.sh
+RUN chmod 0644 /etc/cron.d/my-cron-job \
+    && chmod +x /app/run_script.sh \
+    && crontab /etc/cron.d/my-cron-job
 
 # Create the log file to be able to run tail
 RUN touch /var/log/cron.log
 
-# Run the command on container startup
-CMD cron && tail -f /var/log/cron.log
+# Run cron in the foreground
+CMD ["cron", "-f"]
