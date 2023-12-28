@@ -4,18 +4,28 @@ FROM python:3.8-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Update packages
-RUN apt-get update -y \
+# Install cron
+RUN apt-get update && apt-get install -y cron \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt ./
 
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt --verbose
+# Ensure APScheduler is not in requirements.txt anymore
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Run the Python application
-CMD ["python", "/app/main.py"]
+# Copy entrypoint script and give execution rights
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+# Create a crontab file and set permissions
+COPY my-cronjob /etc/cron.d/my-cronjob
+RUN chmod 0644 /etc/cron.d/my-cronjob \
+    && crontab /etc/cron.d/my-cronjob
+
+# Set the entrypoint script to run when the container starts
+ENTRYPOINT ["/entrypoint.sh"]

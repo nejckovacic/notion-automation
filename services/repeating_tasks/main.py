@@ -1,13 +1,9 @@
 from datetime import datetime
-from apscheduler.schedulers.background import BackgroundScheduler
-import time
-
 from notion_api import NotionAPI
 from utils import should_create_new_page, duplicate_page_data
 
 
-def scheduled_job():
-    print("Running scheduled job at", datetime.now())
+def main():
     notion = NotionAPI()
     database_id = "a2e30c8fddfe4c78af393e767afcc4af"
     filter_conditions = {
@@ -43,15 +39,4 @@ def scheduled_job():
             )
 
 
-if __name__ == "__main__":
-    scheduler = BackgroundScheduler()
-    # Schedule 'scheduled_job' to run every 24 hours
-    scheduler.add_job(scheduled_job, "interval", minutes=5)
-    scheduler.start()
-
-    try:
-        # Keep the script running
-        while True:
-            time.sleep(30)
-    except (KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
+main()
