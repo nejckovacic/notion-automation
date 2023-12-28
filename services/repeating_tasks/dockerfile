@@ -17,9 +17,9 @@ COPY . .
 
 # Copy and set permissions for the cron job and the wrapper script
 COPY crontab /etc/cron.d/my-cron-job
-COPY run_script.sh /app/run_script.sh
+COPY wrapper.sh /app/wrapper.sh
 RUN chmod 0644 /etc/cron.d/my-cron-job \
-    && chmod +x /app/run_script.sh \
+    && chmod +x /app/wrapper.sh \
     && crontab /etc/cron.d/my-cron-job
 
 # Create the log file to be able to run tail
