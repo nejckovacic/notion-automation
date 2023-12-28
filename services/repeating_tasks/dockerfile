@@ -4,26 +4,14 @@ FROM python:3.8-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Install cron and clean up in a single RUN to reduce layer size
-RUN apt-get update && apt-get -y install cron \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy the requirements file and install Python dependencies
+# Copy the requirements file into the container at /app
 COPY requirements.txt ./
+
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . .
 
-# Copy and set permissions for the cron job and the wrapper script
-COPY crontab /etc/cron.d/my-cron-job
-COPY wrapper.sh /app/wrapper.sh
-RUN chmod 0644 /etc/cron.d/my-cron-job \
-    && chmod +x /app/wrapper.sh \
-    && crontab /etc/cron.d/my-cron-job
-
-# Create the log file to be able to run tail
-RUN touch /var/log/cron.log
-
-# Run cron in the foreground
-CMD ["cron", "-f"]
+# Run the Python application
+CMD ["python", "/app/main.py"]
