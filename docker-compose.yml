@@ -2,7 +2,7 @@ version: '3.8'
 services:
   notion-daily-check:
     build:
-      context: .services/repeating_tasks
+      context: ./.services/repeating_tasks
   #  env_file:
   #    - stack.env
 
