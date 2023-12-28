@@ -23,7 +23,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Create a crontab file and set permissions
-COPY crontab /etc/cron.d/my-cronjob
+COPY crontab /etc/cron.d/crontab
 RUN chmod 0644 /etc/cron.d/crontab \
     && crontab /etc/cron.d/crontab
 
