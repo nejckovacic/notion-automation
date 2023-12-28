@@ -23,9 +23,9 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Create a crontab file and set permissions
-COPY my-cronjob /etc/cron.d/my-cronjob
-RUN chmod 0644 /etc/cron.d/my-cronjob \
-    && crontab /etc/cron.d/my-cronjob
+COPY crontab /etc/cron.d/my-cronjob
+RUN chmod 0644 /etc/cron.d/crontab \
+    && crontab /etc/cron.d/crontab
 
 # Set the entrypoint script to run when the container starts
 ENTRYPOINT ["/entrypoint.sh"]
