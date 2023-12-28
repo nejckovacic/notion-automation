@@ -7,4 +7,4 @@ printenv > /etc/environment
 source /etc/environment
 
 # Execute the Python script
-python /app/main.py
+/usr/local/bin/python /app/main.py
