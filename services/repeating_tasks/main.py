@@ -46,12 +46,12 @@ def scheduled_job():
 if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     # Schedule 'scheduled_job' to run every 24 hours
-    scheduler.add_job(scheduled_job, "interval", hours=24)
+    scheduler.add_job(scheduled_job, "interval", minutes=5)
     scheduler.start()
 
     try:
         # Keep the script running
         while True:
-            time.sleep(2)
+            time.sleep(30)
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
