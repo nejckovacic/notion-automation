@@ -1,14 +1,15 @@
-version: '3.8'
+version: "3.8"
 services:
   notion-daily-check:
     build:
       context: ./services/repeating_tasks
     env_file:
       - stack.env
+    pull_policy: build
 
   #notion-google-sync:
   #  build:
   #    context: .services/google_sync
   #  env_file:
   #    - stack.env
-
+  #  pull_policy: build
