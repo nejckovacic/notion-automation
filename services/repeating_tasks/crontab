@@ -8,4 +8,4 @@
 # *  *  *  *  *
 
 # Run 'main.py' every minute
-30 3 * * * /usr/local/bin/python /app/main.py >> /var/log/cron.log 2>&1
+30 3 * * * /usr/local/bin/python /app/main.py > /proc/1/fd/1 2> /proc/1/fd/2

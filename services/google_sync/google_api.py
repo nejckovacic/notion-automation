@@ -15,14 +15,29 @@ class GoogleAPI:
 
     def _get_credentials(self):
         # Try to get GOOGLE_CREDENTIALS from OS environment variables
-        credentials_json = os.getenv("GOOGLE_CREDENTIALS")
-        if credentials_json is None:
-            raise ValueError("No GOOGLE_CREDENTIALS found in environment variables")
+        credentials_json = {
+            "type": "service_account",
+            "project_id": os.getenv("GOOGLE_PROJECT_ID"),
+            "private_key_id": os.getenv("GOOGLE_PIRVATE_KEY_ID"),
+            "private_key": os.getenv("GOOGLE_PRIVATE_KEY"),
+            "client_email": os.getenv("GOOGLE_CLIENT_EMAIL"),
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": os.getenv("GOOGLE_CLIENT_CERT_URL"),
+            "universe_domain": "googleapis.com",
+        }
 
-        return json.loads(credentials_json)
+        if any(value is None for value in credentials_json.values()):
+            raise ValueError(
+                "Incomplete GOOGLE_CREDENTIALS found in environment variables"
+            )
+
+        return credentials_json
 
     def authenticate_google_api(self):
-        credentials = service_account.Credentials.from_service_account_file(
+        credentials = service_account.Credentials.from_service_account_info(
             self.credentials_json,
             scopes=["https://www.googleapis.com/auth/calendar.readonly"],
         )
