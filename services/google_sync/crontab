@@ -8,4 +8,4 @@
 # *  *  *  *  *
 
 # Run 'main.py'
-30 3 * * * /usr/local/bin/python /app/main.py >> /var/log/cron.log 2>&1
+* * * * * /usr/local/bin/python /app/main.py >> /var/log/cron.log 2>&1
