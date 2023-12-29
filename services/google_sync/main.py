@@ -6,9 +6,8 @@ from utils import should_create_new_page, duplicate_page_data
 
 def main():
     print("start")
-    google_api = GoogleAPI()
 
-    # Fetch events for the next 2 weeks
+    google_api = GoogleAPI()
     events = google_api.fetch_calendar_events()
     for event in events:
         print(
