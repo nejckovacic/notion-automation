@@ -6,10 +6,9 @@ services:
     env_file:
       - stack.env
     pull_policy: build
-
-  #notion-google-sync:
-  #  build:
-  #    context: .services/google_sync
-  #  env_file:
-  #    - stack.env
-  #  pull_policy: build
+  notion-google-sync:
+    build:
+      context: .services/google_sync
+    env_file:
+      - stack.env
+    pull_policy: build

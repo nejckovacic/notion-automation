@@ -1,29 +1,54 @@
-# main.py
-
-import os
+from datetime import datetime
+from google_api import GoogleAPI
 from notion_api import NotionAPI
-from utils import format_page_data
+from utils import should_create_new_page, duplicate_page_data
 
-# Try to get NOTION_TOKEN from OS environment variables
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
-# If NOTION_TOKEN is not found, then load from .env file
-if NOTION_TOKEN is None:
-    from dotenv import load_dotenv
-    load_dotenv()
-    NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+def main():
+    print("start")
+    google_api = GoogleAPI()
 
-# Raise error if NOTION_TOKEN is still None after loading .env
-if NOTION_TOKEN is None:
-    raise ValueError("No NOTION_TOKEN found in environment variables or .env file")
+    # Fetch events for the next 2 weeks
+    events = google_api.fetch_calendar_events()
+    for event in events:
+        print(
+            event["summary"], event["start"].get("dateTime", event["start"].get("date"))
+        )
+    print("end")
 
-notion = NotionAPI(NOTION_TOKEN)
+    """notion = NotionAPI()
+    database_id = "a2e30c8fddfe4c78af393e767afcc4af"
+    filter_conditions = {
+        "and": [
+            {"property": "Date", "date": {"is_not_empty": True}},
+            {"property": "repeat", "select": {"is_not_empty": True}},
+            {"property": "Area", "select": {"is_not_empty": True}},
+        ]
+    }
 
-# Rest of your script
-database_id = "a2e30c8fddfe4c78af393e767afcc4af"
-new_page_title = "New Test Page 222"
-additional_properties = {}  # Add additional properties if needed
+    search_results = notion.search_database(database_id, filter_conditions)
+    current_date = datetime.now()
 
-page_data = format_page_data(new_page_title, additional_properties)
-response = notion.create_page(database_id, page_data)
-print("New page created:", response)
+    for page in search_results.get("results", []):
+        repeat_property = (
+            page.get("properties", {}).get("repeat", {}).get("select", {}).get("name")
+        )
+        date_property_str = (
+            page.get("properties", {}).get("Date", {}).get("date", {}).get("start")
+        )
+        date_property = (
+            datetime.fromisoformat(date_property_str) if date_property_str else None
+        )
+
+        if date_property and should_create_new_page(
+            repeat_property, date_property, current_date
+        ):
+            page_data = duplicate_page_data(database_id, page)
+            notion.create_page(page_data)
+            print(
+                "New page created:",
+                page["properties"]["Name"]["title"][0]["text"]["content"],
+            )"""
+
+
+main()
