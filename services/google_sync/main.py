@@ -5,49 +5,41 @@ from utils import should_create_new_page, duplicate_page_data
 
 
 def main():
-    print("start")
+    calendars = [
+        {"name": "Personal", "id": "nejc.kovacic9@gmail.com", "area": "Personal"},
+        {
+            "name": "Family",
+            "id": "family06939489949381963345@group.calendar.google.com",
+            "area": "Personal",
+        },
+        {
+            "name": "MAG",
+            "id": "4cf21bbad8ae042084630042d288d84f80f4cf7186bbf8ab0ffa9d36ae1fd224@group.calendar.google.com",
+            "area": "School",
+        },
+        {"name": "Ana", "id": "ana1.bertoncelj@gmail.com", "area": "Personal"},
+        {
+            "name": "MAG-Urnik",
+            "id": "vh25mg35id59jrm7ipqe6t8jjllbn61r@import.calendar.google.com",
+            "area": "School",
+        },
+        {"name": "Kalmia", "id": "nejc.kovacic@kalmia.si", "area": "Kalmia"},
+    ]
 
+    notion_api = NotionAPI("a2e30c8fddfe4c78af393e767afcc4af")
     google_api = GoogleAPI()
-    events = google_api.fetch_calendar_events()
-    for event in events:
-        print(
-            event["summary"], event["start"].get("dateTime", event["start"].get("date"))
-        )
-    print("end")
 
-    """notion = NotionAPI()
-    database_id = "a2e30c8fddfe4c78af393e767afcc4af"
-    filter_conditions = {
-        "and": [
-            {"property": "Date", "date": {"is_not_empty": True}},
-            {"property": "repeat", "select": {"is_not_empty": True}},
-            {"property": "Area", "select": {"is_not_empty": True}},
-        ]
-    }
-
-    search_results = notion.search_database(database_id, filter_conditions)
-    current_date = datetime.now()
-
-    for page in search_results.get("results", []):
-        repeat_property = (
-            page.get("properties", {}).get("repeat", {}).get("select", {}).get("name")
-        )
-        date_property_str = (
-            page.get("properties", {}).get("Date", {}).get("date", {}).get("start")
-        )
-        date_property = (
-            datetime.fromisoformat(date_property_str) if date_property_str else None
-        )
-
-        if date_property and should_create_new_page(
-            repeat_property, date_property, current_date
-        ):
-            page_data = duplicate_page_data(database_id, page)
-            notion.create_page(page_data)
-            print(
-                "New page created:",
-                page["properties"]["Name"]["title"][0]["text"]["content"],
-            )"""
+    for calendar in calendars:
+        events = google_api.fetch_calendar_events(calendar["id"])
+        if events:
+            for event in events:
+                notion_api.create_or_update_event(event, calendar)
+                print(
+                    event["summary"],
+                    event["start"].get("dateTime", event["start"].get("date")),
+                )
+            # For testing only
+        break
 
 
 main()
