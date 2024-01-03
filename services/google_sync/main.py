@@ -1,7 +1,5 @@
-from datetime import datetime
 from google_api import GoogleAPI
 from notion_api import NotionAPI
-from utils import should_create_new_page, duplicate_page_data
 
 
 def main():
@@ -30,7 +28,7 @@ def main():
     google_api = GoogleAPI()
 
     for calendar in calendars:
-        events = google_api.fetch_calendar_events(calendar["id"])
+        events = google_api.fetch_calendar_events(calendar["id"],2)
         if events:
             for event in events:
                 notion_api.create_or_update_event(event, calendar)
@@ -38,8 +36,7 @@ def main():
                     event["summary"],
                     event["start"].get("dateTime", event["start"].get("date")),
                 )
-            # For testing only
-        break
+        
 
 
 main()
