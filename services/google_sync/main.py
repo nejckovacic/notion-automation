@@ -1,29 +1,42 @@
-# main.py
-
-import os
+from google_api import GoogleAPI
 from notion_api import NotionAPI
-from utils import format_page_data
 
-# Try to get NOTION_TOKEN from OS environment variables
-NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 
-# If NOTION_TOKEN is not found, then load from .env file
-if NOTION_TOKEN is None:
-    from dotenv import load_dotenv
-    load_dotenv()
-    NOTION_TOKEN = os.getenv("NOTION_TOKEN")
+def main():
+    calendars = [
+        {"name": "Personal", "id": "nejc.kovacic9@gmail.com", "area": "Personal"},
+        {
+            "name": "Family",
+            "id": "family06939489949381963345@group.calendar.google.com",
+            "area": "Personal",
+        },
+        {
+            "name": "MAG",
+            "id": "4cf21bbad8ae042084630042d288d84f80f4cf7186bbf8ab0ffa9d36ae1fd224@group.calendar.google.com",
+            "area": "School",
+        },
+        {"name": "Ana", "id": "ana1.bertoncelj@gmail.com", "area": "Personal"},
+        {
+            "name": "MAG-Urnik",
+            "id": "vh25mg35id59jrm7ipqe6t8jjllbn61r@import.calendar.google.com",
+            "area": "School",
+        },
+        {"name": "Kalmia", "id": "nejc.kovacic@kalmia.si", "area": "Kalmia"},
+    ]
 
-# Raise error if NOTION_TOKEN is still None after loading .env
-if NOTION_TOKEN is None:
-    raise ValueError("No NOTION_TOKEN found in environment variables or .env file")
+    notion_api = NotionAPI("a2e30c8fddfe4c78af393e767afcc4af")
+    google_api = GoogleAPI()
 
-notion = NotionAPI(NOTION_TOKEN)
+    for calendar in calendars:
+        events = google_api.fetch_calendar_events(calendar["id"],2)
+        if events:
+            for event in events:
+                notion_api.create_or_update_event(event, calendar)
+                print(
+                    event["summary"],
+                    event["start"].get("dateTime", event["start"].get("date")),
+                )
+        
 
-# Rest of your script
-database_id = "a2e30c8fddfe4c78af393e767afcc4af"
-new_page_title = "New Test Page 222"
-additional_properties = {}  # Add additional properties if needed
 
-page_data = format_page_data(new_page_title, additional_properties)
-response = notion.create_page(database_id, page_data)
-print("New page created:", response)
+main()
